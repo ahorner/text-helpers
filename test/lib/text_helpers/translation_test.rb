@@ -26,19 +26,19 @@ describe TextHelpers::Translation do
       end
 
       it "looks up the text for the key in a scope derived from the call stack" do
-        assert_equal @helper.text(:test_key), "*#{@scoped_text}*"
+        assert_equal "*#{@scoped_text}*", @helper.text(:test_key)
       end
 
       it "converts the text to HTML via Markdown" do
-        assert_equal @helper.html(:test_key), "<p><em>#{@scoped_text}</em></p>\n"
+        assert_equal "<p><em>#{@scoped_text}</em></p>\n", @helper.html(:test_key)
       end
 
       it "removes the enclosing paragraph with :inline" do
-        assert_equal @helper.html(:test_key, inline: true), "<em>#{@scoped_text}</em>"
+        assert_equal "<em>#{@scoped_text}</em>\n", @helper.html(:test_key, inline: true)
       end
 
       it "interpolates values wrapped in !!" do
-        assert_equal @helper.text(:interpolated_key), "Global? (#{@global_text})"
+        assert_equal "Global? (#{@global_text})", @helper.text(:interpolated_key)
       end
     end
 
@@ -50,7 +50,7 @@ describe TextHelpers::Translation do
       end
 
       it "defaults to a globally-defined value for the key" do
-        assert_equal @helper.text(:test_key), @global_text
+        assert_equal @global_text, @helper.text(:test_key)
       end
     end
   end
