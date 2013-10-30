@@ -35,7 +35,7 @@ module TextHelpers
     def html(key, options = {})
       rendered = GitHub::Markdown.render(text(key, options))
       if options[:inline]
-        rendered.match(/\A<p>(.*)<\/p>\Z/)[1].html_safe
+        rendered.gsub(/<\/?p>/, '').html_safe
       else
         rendered.html_safe
       end
