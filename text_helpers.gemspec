@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.name          = "text_helpers"
   gem.require_paths = ["lib"]
   gem.version       = TextHelpers::VERSION
+  gem.license       = "MIT"
 
   gem.add_dependency('activesupport')
   gem.add_dependency('i18n')
