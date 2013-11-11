@@ -28,6 +28,21 @@ module TextHelpers
         end
       end
 
+      class ActionMailer::Base
+        include TextHelpers::Translation
+
+        protected
+
+        # Protected: Provides a scope for I18n lookups.
+        #
+        # Should look like `mailers.<mailer>.<action>`
+        #
+        # Returns a String.
+        def translation_scope
+          "mailers.#{mailer_name.tr("/", ".").sub("_mailer", "")}.#{action_name}"
+        end
+      end
+
       class ActionController::Base
         include TextHelpers::Translation
 
