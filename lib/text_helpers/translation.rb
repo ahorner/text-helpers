@@ -18,8 +18,8 @@ module TextHelpers
         default: "!#{key}!"
       }.merge(options))
 
-      # Interpolate any keypaths (e.g., `!some.lookup.key!`) found in the text.
-      text.strip.gsub(/!([\w._]+)!/) do |match|
+      # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
+      text.strip.gsub(/!([\w._\/]+)!/) do |match|
         I18n.t($1)
       end.html_safe
     end
