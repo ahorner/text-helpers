@@ -10,6 +10,9 @@ module TextHelpers
     #
     # key     - The desired I18n lookup key.
     # options - A Hash of options to pass through to the lookup.
+    #           :orphans - A special option that will prevent the insertion of
+    #                      non-breaking space characters at the end of the text
+    #                      when set to true.
     #
     # Returns a String resulting from the I18n lookup.
     def text(key, options = {})
@@ -19,26 +22,30 @@ module TextHelpers
       }.merge(options))
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
-      text.strip.gsub(/!([\w._\/]+)!/) do |match|
+      final_text = text.strip.gsub(/!([\w._\/]+)!/) do |match|
         I18n.t($1)
-      end.html_safe
+      end
+      final_text = final_text.sub(/\s(\S+)\Z/, '&nbsp;\1') unless options[:orphans]
+      final_text.html_safe
     end
 
     # Public: Get an HTML representation of the rendered markdown for the passed I18n key.
     #
     # key     - The desired I18n lookup key.
     # options - A Hash of options to pass through to the lookup.
-    #           :inline - A special option that will remove the enclosing <p>
-    #                     tags when set to true.
+    #           :inline  - A special option that will remove the enclosing <p>
+    #                      tags when set to true.
+    #           :orphans - A special option that will prevent the insertion of
+    #                      non-breaking space characters at the end of each
+    #                      paragraph when set to true.
     #
     # Returns a String containing the localized text rendered via Markdown
     def html(key, options = {})
-      rendered = GitHub::Markdown.render(text(key, options))
-      if options[:inline]
-        rendered.gsub(/<\/?p>/, '').html_safe
-      else
-        rendered.html_safe
-      end
+      rendered = GitHub::Markdown.render(text(key, options.merge(orphans: true)))
+
+      rendered = options[:orphans] ? rendered : rendered.sub(/\s(\S+\s*<\/p>)/, '&nbsp;\1')
+      rendered = rendered.gsub(/<\/?p>/, '') if options[:inline]
+      rendered.html_safe
     end
 
     protected

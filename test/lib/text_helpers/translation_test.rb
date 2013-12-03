@@ -9,6 +9,9 @@ describe TextHelpers::Translation do
       @scoped_text = "Scoped lookup"
       @global_text = "Global lookup"
 
+      @nb_scoped_text = "Scoped&nbsp;lookup"
+      @nb_global_text = "Global&nbsp;lookup"
+
       I18n.backend.store_translations :en, {
         test_key: @global_text,
         test: {
@@ -26,19 +29,31 @@ describe TextHelpers::Translation do
       end
 
       it "looks up the text for the key in a scope derived from the call stack" do
-        assert_equal "*#{@scoped_text}*", @helper.text(:test_key)
+        assert_equal "*#{@nb_scoped_text}*", @helper.text(:test_key)
+      end
+
+      it "allows orphaned text with :orphans" do
+        assert_equal "*#{@scoped_text}*", @helper.text(:test_key, orphans: true)
       end
 
       it "converts the text to HTML via Markdown" do
-        assert_equal "<p><em>#{@scoped_text}</em></p>\n", @helper.html(:test_key)
+        assert_equal "<p><em>#{@nb_scoped_text}</em></p>\n", @helper.html(:test_key)
+      end
+
+      it "allows orphaned text with :orphans" do
+        assert_equal "<p><em>#{@scoped_text}</em></p>\n", @helper.html(:test_key, orphans: true)
       end
 
       it "removes the enclosing paragraph with :inline" do
-        assert_equal "<em>#{@scoped_text}</em>\n", @helper.html(:test_key, inline: true)
+        assert_equal "<em>#{@nb_scoped_text}</em>\n", @helper.html(:test_key, inline: true)
+      end
+
+      it "correctly combines :orphans and :inline options" do
+        assert_equal "<em>#{@scoped_text}</em>\n", @helper.html(:test_key, inline: true, orphans: true)
       end
 
       it "interpolates values wrapped in !!" do
-        assert_equal "Global? (#{@global_text})", @helper.text(:interpolated_key)
+        assert_equal "Global? (#{@nb_global_text})", @helper.text(:interpolated_key)
       end
     end
 
@@ -50,7 +65,7 @@ describe TextHelpers::Translation do
       end
 
       it "defaults to a globally-defined value for the key" do
-        assert_equal @global_text, @helper.text(:test_key)
+        assert_equal @nb_global_text, @helper.text(:test_key)
       end
     end
   end
