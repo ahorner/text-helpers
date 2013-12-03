@@ -8,12 +8,18 @@ describe TextHelpers::Translation do
     before do
       @scoped_text = "Scoped lookup"
       @global_text = "Global lookup"
+      @multiline_text = <<-MULTI.gsub(/^[ \t]*/, '')
+        This is some multiline text.
+
+        It should include multiple paragraphs.
+      MULTI
 
       @nb_scoped_text = "Scoped&nbsp;lookup"
       @nb_global_text = "Global&nbsp;lookup"
 
       I18n.backend.store_translations :en, {
         test_key: @global_text,
+        multiline_key: @multiline_text,
         test: {
           test_key: "*#{@scoped_text}*",
           interpolated_key: "Global? (!test_key!)"
@@ -42,6 +48,15 @@ describe TextHelpers::Translation do
 
       it "allows orphaned text with :orphans" do
         assert_equal "<p><em>#{@scoped_text}</em></p>\n", @helper.html(:test_key, orphans: true)
+      end
+
+      it "correctly eliminates orphans across multiple paragraphs" do
+        expected = <<-EXPECTED.gsub(/^[ \t]*/, '')
+          <p>This is some multiline&nbsp;text.</p>
+
+          <p>It should include multiple&nbsp;paragraphs.</p>
+        EXPECTED
+        assert_equal expected, @helper.html(:multiline_key)
       end
 
       it "removes the enclosing paragraph with :inline" do
