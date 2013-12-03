@@ -8,7 +8,7 @@ describe TextHelpers::Translation do
     before do
       @scoped_text = "Scoped lookup"
       @global_text = "Global lookup"
-      @multiline_text = <<-MULTI.gsub(/^[ \t]*/, '')
+      @multiline_text = <<-MULTI.gsub(/^[ \t]+/, '')
         This is some multiline text.
 
         It should include multiple paragraphs.
@@ -22,6 +22,7 @@ describe TextHelpers::Translation do
         multiline_key: @multiline_text,
         test: {
           test_key: "*#{@scoped_text}*",
+          list_key: "* #{@scoped_text}",
           interpolated_key: "Global? (!test_key!)"
         }
       }
@@ -46,12 +47,22 @@ describe TextHelpers::Translation do
         assert_equal "<p><em>#{@nb_scoped_text}</em></p>\n", @helper.html(:test_key)
       end
 
+      it "handles orphans within HTML list items" do
+        expected = <<-EXPECTED.gsub(/^[ \t]+/, '')
+        <ul>
+        <li>#{@nb_scoped_text}</li>
+        </ul>
+        EXPECTED
+
+        assert_equal expected, @helper.html(:list_key)
+      end
+
       it "allows orphaned text with :orphans" do
         assert_equal "<p><em>#{@scoped_text}</em></p>\n", @helper.html(:test_key, orphans: true)
       end
 
       it "correctly eliminates orphans across multiple paragraphs" do
-        expected = <<-EXPECTED.gsub(/^[ \t]*/, '')
+        expected = <<-EXPECTED.gsub(/^[ \t]+/, '')
           <p>This is some multiline&nbsp;text.</p>
 
           <p>It should include multiple&nbsp;paragraphs.</p>
