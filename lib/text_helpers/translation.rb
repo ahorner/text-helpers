@@ -6,6 +6,8 @@ module TextHelpers
 
   module Translation
 
+    ORPHAN_MATCHER = /\s(?![^<]*>)(\S+\s*<\/(?:p|li)>)/.freeze
+
     # Public: Get the I18n localized text for the passed key.
     #
     # key     - The desired I18n lookup key.
@@ -43,7 +45,7 @@ module TextHelpers
     def html(key, options = {})
       rendered = GitHub::Markdown.render(text(key, options.merge(orphans: true)))
 
-      rendered = options[:orphans] ? rendered : rendered.gsub(/\s(\S+\s*<\/(?:p|li)>)/, '&nbsp;\1')
+      rendered = options[:orphans] ? rendered : rendered.gsub(ORPHAN_MATCHER, '&nbsp;\1')
       rendered = rendered.gsub(/<\/?p>/, '') if options[:inline]
       rendered.html_safe
     end

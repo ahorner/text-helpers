@@ -8,6 +8,7 @@ describe TextHelpers::Translation do
     before do
       @scoped_text = "Scoped lookup"
       @global_text = "Global lookup"
+      @email_address = "user@example.org"
       @multiline_text = <<-MULTI.gsub(/^[ \t]+/, '')
         This is some multiline text.
 
@@ -21,6 +22,7 @@ describe TextHelpers::Translation do
         test_key: @global_text,
         multiline_key: @multiline_text,
         test: {
+          email_key: "<#{@email_address}>",
           test_key: "*#{@scoped_text}*",
           list_key: "* #{@scoped_text}",
           interpolated_key: "Global? (!test_key!)"
@@ -55,6 +57,11 @@ describe TextHelpers::Translation do
         EXPECTED
 
         assert_equal expected, @helper.html(:list_key)
+      end
+
+      it "does not modify HTML tags" do
+        expected = "<p><a href=\"mailto:#{@email_address}\">#{@email_address}</a></p>\n"
+        assert_equal expected, @helper.html(:email_key)
       end
 
       it "allows orphaned text with :orphans" do
