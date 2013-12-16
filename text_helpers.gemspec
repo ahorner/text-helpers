@@ -23,6 +23,6 @@ Gem::Specification.new do |gem|
   gem.license       = "MIT"
 
   gem.add_dependency('activesupport')
-  gem.add_dependency('i18n')
+  gem.add_dependency('i18n', '>=0.6.8')
   gem.add_dependency('github-markdown')
 end
