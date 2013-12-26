@@ -24,10 +24,7 @@ module TextHelpers
       }.merge(options))
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
-      final_text = text.strip.gsub(/!([\w._\/]+)!/) do |match|
-        I18n.t($1)
-      end
-      final_text = final_text.sub(/\s(\S+)\Z/, '&nbsp;\1') unless options[:orphans]
+      final_text = text.strip.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1) }
       final_text.html_safe
     end
 
@@ -43,7 +40,7 @@ module TextHelpers
     #
     # Returns a String containing the localized text rendered via Markdown
     def html(key, options = {})
-      rendered = GitHub::Markdown.render(text(key, options.merge(orphans: true)))
+      rendered = GitHub::Markdown.render(text(key, options))
 
       rendered = options[:orphans] ? rendered : rendered.gsub(ORPHAN_MATCHER, '&nbsp;\1')
       rendered = rendered.gsub(/<\/?p>/, '') if options[:inline]

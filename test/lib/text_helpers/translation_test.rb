@@ -16,7 +16,6 @@ describe TextHelpers::Translation do
       MULTI
 
       @nb_scoped_text = "Scoped&nbsp;lookup"
-      @nb_global_text = "Global&nbsp;lookup"
 
       I18n.backend.store_translations :en, {
         test_key: @global_text,
@@ -38,11 +37,7 @@ describe TextHelpers::Translation do
       end
 
       it "looks up the text for the key in a scope derived from the call stack" do
-        assert_equal "*#{@nb_scoped_text}*", @helper.text(:test_key)
-      end
-
-      it "allows orphaned text with :orphans" do
-        assert_equal "*#{@scoped_text}*", @helper.text(:test_key, orphans: true)
+        assert_equal "*#{@scoped_text}*", @helper.text(:test_key)
       end
 
       it "converts the text to HTML via Markdown" do
@@ -86,7 +81,7 @@ describe TextHelpers::Translation do
       end
 
       it "interpolates values wrapped in !!" do
-        assert_equal "Global? (#{@nb_global_text})", @helper.text(:interpolated_key)
+        assert_equal "Global? (#{@global_text})", @helper.text(:interpolated_key)
       end
     end
 
@@ -98,7 +93,7 @@ describe TextHelpers::Translation do
       end
 
       it "defaults to a globally-defined value for the key" do
-        assert_equal @nb_global_text, @helper.text(:test_key)
+        assert_equal @global_text, @helper.text(:test_key)
       end
     end
   end
