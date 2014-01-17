@@ -18,6 +18,14 @@ structure mirroring the app directory structure. The text for
 requirement, but will go a long way toward keeping your locales easily
 maintainable.
 
+If you're using this within a Rails project, you'll probably want to add the
+following line to your application.rb to ensure that Rails loads any locale
+files organized this way:
+
+```ruby
+config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+```
+
 In any locale file entry, you can reference another key in the locale file by
 using the syntax `!scope.to.key!`. For the sake of maintainability, the use of
 this interpolation should be restricted to small fragments of highly-recycled 
