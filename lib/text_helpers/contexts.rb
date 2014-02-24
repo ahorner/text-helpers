@@ -22,12 +22,8 @@ shared_context "a view spec", view: true do
   def translation_scope
     matcher = /(?<path>.*)\/_?(?<view>[^\/.]+)(?<extension>\.html\.haml)?/
     info = matcher.match(example.metadata[:full_description])
+    path = info[:path].gsub('/', '.')
 
-    if info
-      path = info[:path].gsub('/', '.')
-      "views.#{path}.#{info[:view]}"
-    else
-      "views.#{params[:controller]}.#{params[:action]}"
-    end
+    "views.#{path}.#{info[:view]}"
   end
 end
