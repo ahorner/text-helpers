@@ -21,10 +21,11 @@ describe TextHelpers::Translation do
         test_key: @global_text,
         multiline_key: @multiline_text,
         test: {
-          email_key: "<#{@email_address}>",
-          test_key: "*#{@scoped_text}*",
-          list_key: "* #{@scoped_text}",
-          interpolated_key: "Global? (!test_key!)"
+          email_key:        "<#{@email_address}>",
+          test_key:         "*#{@scoped_text}*",
+          list_key:         "* #{@scoped_text}",
+          interpolated_key: "Global? (!test_key!)",
+          recursive_key:    "Recursively !test.interpolated_key!"
         }
       }
     end
@@ -82,6 +83,10 @@ describe TextHelpers::Translation do
 
       it "interpolates values wrapped in !!" do
         assert_equal "Global? (#{@global_text})", @helper.text(:interpolated_key)
+      end
+
+      it "handles recursive interpolation" do
+        assert_equal "Recursively Global? (#{@global_text})", @helper.text(:recursive_key)
       end
     end
 

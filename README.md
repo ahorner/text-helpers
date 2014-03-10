@@ -27,10 +27,10 @@ config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,y
 ```
 
 In any locale file entry, you can reference another key in the locale file by
-using the syntax `!scope.to.key!`. For the sake of maintainability, the use of
-this interpolation should be restricted to small fragments of highly-recycled 
-static values. `I18n`'s built-in `%{value}` interpolation can be used for 
-variable text.
+using the syntax `!scope.to.key!`. For the sake of maintainability, I
+recommend restricting the use of this feature to small, highly-recycled
+fragments of static text. `I18n`'s built-in `%{value}` interpolation can be
+used for variable text.
 
 ### In Views
 

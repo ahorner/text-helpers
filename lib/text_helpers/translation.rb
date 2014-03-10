@@ -21,11 +21,14 @@ module TextHelpers
       text = I18n.t(key, {
         scope: self.translation_scope,
         default: "!#{key}!"
-      }.merge(options))
+      }.merge(options)).strip
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
-      final_text = text.strip.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1) }
-      final_text.html_safe
+      while text =~ /!([\w._\/]+)!/ do
+        text = text.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1) }
+      end
+
+      text.html_safe
     end
 
     # Public: Get an HTML representation of the rendered markdown for the passed I18n key.
