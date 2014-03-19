@@ -25,7 +25,8 @@ describe TextHelpers::Translation do
           test_key:         "*#{@scoped_text}*",
           list_key:         "* #{@scoped_text}",
           interpolated_key: "Global? (!test_key!)",
-          recursive_key:    "Recursively !test.interpolated_key!"
+          recursive_key:    "Recursively !test.interpolated_key!",
+          quoted_key:       "\"#{@global_text}\"--#{@scoped_text}"
         }
       }
     end
@@ -87,6 +88,10 @@ describe TextHelpers::Translation do
 
       it "handles recursive interpolation" do
         assert_equal "Recursively Global? (#{@global_text})", @helper.text(:recursive_key)
+      end
+
+      it "automatically converts quotes and dashes to clean HTML replacements" do
+        assert_equal "<p>&ldquo;#{@global_text}&rdquo;&ndash;#{@nb_scoped_text}</p>\n", @helper.html(:quoted_key)
       end
     end
 

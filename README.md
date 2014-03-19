@@ -44,6 +44,12 @@ html_safe (so HTML can be used here, when absolutely necessary).
 `html` parses the requested text using Markdown, making it useful for rendering
 larger pieces of text involving multiple paragraphs, list items or links.
 
+`html` automatically parses Markdown using
+[`SmartyPants`-style](http://daringfireball.net/projects/smartypants/)
+character conversions, so you can write plain text and have the proper
+typographical elements generated for you without having to explicitly insert
+HTML entities for common cases.
+
 If you want to render a small fragment of Markdown without `p` tag wrappers,
 you can pass `inline: true` as an option to `html`.
 
