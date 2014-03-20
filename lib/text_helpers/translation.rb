@@ -43,7 +43,7 @@ module TextHelpers
     #
     # Returns a String containing the localized text rendered via Markdown
     def html(key, options = {})
-      rendered = render(text(key, options))
+      rendered = markdown(text(key, options))
 
       rendered = options[:orphans] ? rendered : rendered.gsub(ORPHAN_MATCHER, '&nbsp;\1')
       rendered = rendered.gsub(/<\/?p>/, '') if options[:inline]
@@ -57,7 +57,7 @@ module TextHelpers
     # text - A String representing the text which should be rendered to HTML.
     #
     # Returns a String.
-    def render(text)
+    def markdown(text)
       @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
       Redcarpet::Render::SmartyPants.render(@renderer.render(text))
     end
