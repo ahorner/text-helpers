@@ -26,7 +26,8 @@ describe TextHelpers::Translation do
           list_key:         "* #{@scoped_text}",
           interpolated_key: "Global? (!test_key!)",
           recursive_key:    "Recursively !test.interpolated_key!",
-          quoted_key:       "They're looking for \"#{@global_text}\"--#{@scoped_text}"
+          quoted_key:       "They're looking for \"#{@global_text}\"--#{@scoped_text}",
+          number_key:       "120\""
         }
       }
     end
@@ -100,6 +101,10 @@ describe TextHelpers::Translation do
 
       it "automatically converts quotes and dashes to clean HTML replacements" do
         assert_equal "<p>They&rsquo;re looking for &ldquo;#{@global_text}&rdquo;&ndash;#{@nb_scoped_text}</p>\n", @helper.html(:quoted_key)
+      end
+
+      it "converts to straight quotes in the general case" do
+        assert_equal "120&quot;", @helper.text(:number_key) # 120"
       end
     end
 
