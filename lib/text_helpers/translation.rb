@@ -15,6 +15,8 @@ module TextHelpers
     #           :orphans - A special option that will prevent the insertion of
     #                      non-breaking space characters at the end of the text
     #                      when set to true.
+    #           :smart   - Whether or not to apply smart quoting to the output.
+    #                      Defaults to true.
     #
     # Returns a String resulting from the I18n lookup.
     def text(key, options = {})
@@ -28,6 +30,7 @@ module TextHelpers
         text = text.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1) }
       end
 
+      text = smartify(text) if options.fetch(:smart, true)
       text.html_safe
     end
 
@@ -43,7 +46,7 @@ module TextHelpers
     #
     # Returns a String containing the localized text rendered via Markdown
     def html(key, options = {})
-      rendered = markdown(text(key, options))
+      rendered = markdown(text(key, options.merge(smart: false)))
 
       rendered = options[:orphans] ? rendered : rendered.gsub(ORPHAN_MATCHER, '&nbsp;\1')
       rendered = rendered.gsub(/<\/?p>/, '') if options[:inline]
@@ -59,7 +62,16 @@ module TextHelpers
     # Returns a String.
     def markdown(text)
       @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
-      Redcarpet::Render::SmartyPants.render(@renderer.render(text))
+      smartify(@renderer.render(text))
+    end
+
+    # Protected: Auto-apply smart quotes and to the passed text.
+    #
+    # text - A String which should be passed through the SmartyPants renderer.
+    #
+    # Returns a String.
+    def smartify(text)
+      Redcarpet::Render::SmartyPants.render(text)
     end
 
     # Protected: The proper scope for I18n translation.
