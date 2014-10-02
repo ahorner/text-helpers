@@ -27,6 +27,7 @@ describe TextHelpers::Translation do
           interpolated_key: "Global? (!test_key!)",
           recursive_key:    "Recursively !test.interpolated_key!",
           quoted_key:       "They're looking for \"#{@global_text}\"--#{@scoped_text}",
+          argument_key:     "This is what %{user} said",
           number_key:       "120\""
         }
       }
@@ -105,6 +106,22 @@ describe TextHelpers::Translation do
 
       it "converts to straight quotes in the general case" do
         assert_equal "120&quot;", @helper.text(:number_key) # 120"
+      end
+
+      it "handles i18n arguments" do
+        assert_equal "This is what Han Solo said", @helper.text(:argument_key, user: "Han Solo")
+      end
+
+      it "handles i18n arguments which are not strings" do
+        assert_equal "This is what 1234 said", @helper.text(:argument_key, user: 1234)
+      end
+
+      it "handles i18n arguments which are not html-safe" do
+        assert_equal "This is what &lt;b&gt;Han&lt;/b&gt; Solo said", @helper.text(:argument_key, user: "<b>Han</b> Solo")
+      end
+
+      it "handles i18n arguments which are html-safe" do
+        assert_equal "This is what <b>Han</b> Solo said", @helper.text(:argument_key, user: "<b>Han</b> Solo".html_safe)
       end
     end
 

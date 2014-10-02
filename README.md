@@ -1,6 +1,6 @@
 # TextHelpers
 
-`TextHelpers` is a library intended to make working with static text in Rails 
+`TextHelpers` is a library intended to make working with static text in Rails
 projects as painless as possible.
 
 Include it in your `Gemfile` with:
@@ -11,9 +11,9 @@ gem "text_helpers"
 
 ## Suggested Use
 
-All static text should be placed in locale files, in a directory 
-structure mirroring the app directory structure. The text for 
-`app/views/some/_partial.html.haml` would go in 
+All static text should be placed in locale files, in a directory
+structure mirroring the app directory structure. The text for
+`app/views/some/_partial.html.haml` would go in
 `config/locales/views/some/partial.en.yml`, for example. This is not a strict
 requirement, but will go a long way toward keeping your locales easily
 maintainable.
@@ -35,10 +35,10 @@ used for variable text.
 ### In Views
 
 To access this text in views, two helpers are available, `text` and `html`.
-Both helpers take a lookup key, used to identify the desired piece of text, 
+Both helpers take a lookup key, used to identify the desired piece of text,
 and an argument hash, which is forwarded to the `I18n.t` call.
 
-`text` returns the requested text, with special values interpolated, and made 
+`text` returns the requested text, with special values interpolated, and made
 html_safe (so HTML can be used here, when absolutely necessary).
 
 `html` parses the requested text using Markdown, making it useful for rendering
@@ -53,6 +53,19 @@ HTML entities for common cases.
 If you want to render a small fragment of Markdown without `p` tag wrappers,
 you can pass `inline: true` as an option to `html`.
 
+`text` and `html` will escape all arguments passed to it in order to prevent XSS
+attacks. If you want to pass html content, you should ensure you mark it as .html_safe
+
+Example: `text('welcome_user', username)` will escape html characters in username
+```ruby
+Welcome &lt;b&gt;Bob&lt;/b&gt;
+```
+
+Example: `text('welcome_user', username.html_safe)` will output html characters in username
+```ruby
+Welcome <b>Bob</b>
+```
+
 ### In Controllers
 
 The same helpers are available in controllers, with the translation scope based
@@ -61,7 +74,7 @@ used for flash messages or alerts of some kind.
 
 ## Testing
 
-Some shared `RSpec` contexts are available to allow the same locale 
+Some shared `RSpec` contexts are available to allow the same locale
 abstractions for testing. You can include these contexts with:
 
 ```
