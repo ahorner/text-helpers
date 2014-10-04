@@ -89,11 +89,10 @@ module TextHelpers
     #
     # Returns a hash
     def html_safe_options(hash)
-      res = {}
-      hash.each do |key, value|
-        res[key] = ERB::Util.h(value)
+      hash.inject({}) do |result, (key, value)|
+        result[key] = ERB::Util.h(value)
+        result
       end
-      res
     end
   end
 end
