@@ -23,7 +23,7 @@ module TextHelpers
       text = I18n.t(key, {
         scope: self.translation_scope,
         default: "!#{key}!"
-      }.merge(options)).strip
+      }.merge(html_safe_options(options))).strip
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
       while text =~ /!([\w._\/]+)!/ do
@@ -81,6 +81,18 @@ module TextHelpers
     # Raises NotImplementedError.
     def translation_scope
       raise NotImplementedError
+    end
+
+    # Protected: Convert all passed in arguments into html-safe strings
+    #
+    # hash - a set of key-value pairs, which converts the second argument into an html-safe string
+    #
+    # Returns a hash
+    def html_safe_options(hash)
+      hash.inject({}) do |result, (key, value)|
+        result[key] = ERB::Util.h(value)
+        result
+      end
     end
   end
 end
