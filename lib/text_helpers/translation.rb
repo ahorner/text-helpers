@@ -90,7 +90,13 @@ module TextHelpers
     # Returns a hash
     def html_safe_options(hash)
       hash.inject({}) do |result, (key, value)|
-        result[key] = ERB::Util.h(value)
+        result[key] = case value
+          when String
+            ERB::Util.h(value)
+          else
+            value
+          end
+
         result
       end
     end

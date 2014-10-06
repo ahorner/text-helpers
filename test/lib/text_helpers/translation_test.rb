@@ -28,7 +28,11 @@ describe TextHelpers::Translation do
           recursive_key:    "Recursively !test.interpolated_key!",
           quoted_key:       "They're looking for \"#{@global_text}\"--#{@scoped_text}",
           argument_key:     "This is what %{user} said",
-          number_key:       "120\""
+          number_key:       "120\"",
+          pluralized_key: {
+            one:            "A single piece of text",
+            other:          "%{count} pieces of text"
+          }
         }
       }
     end
@@ -122,6 +126,11 @@ describe TextHelpers::Translation do
 
       it "handles i18n arguments which are html-safe" do
         assert_equal "This is what <b>Han</b> Solo said", @helper.text(:argument_key, user: "<b>Han</b> Solo".html_safe)
+      end
+
+      it "correctly handles non-string params" do
+        assert_equal "A single piece of text", @helper.text(:pluralized_key, count: 1)
+        assert_equal "2 pieces of text", @helper.text(:pluralized_key, count: 2)
       end
     end
 
