@@ -20,14 +20,15 @@ module TextHelpers
     #
     # Returns a String resulting from the I18n lookup.
     def text(key, options = {})
+      options = html_safe_options(options)
       text = I18n.t(key, {
         scope: self.translation_scope,
         default: "!#{key}!"
-      }.merge(html_safe_options(options))).strip
+      }.merge(options)).strip
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
       while text =~ /!([\w._\/]+)!/ do
-        text = text.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1) }
+        text = text.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1, options) }
       end
 
       text = smartify(text) if options.fetch(:smart, true)

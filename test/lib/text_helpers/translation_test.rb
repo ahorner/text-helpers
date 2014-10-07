@@ -20,11 +20,13 @@ describe TextHelpers::Translation do
       I18n.backend.store_translations :en, {
         test_key: @global_text,
         multiline_key: @multiline_text,
+        interpolated_key: "%{interpolate_with}",
         test: {
           email_key:        "<#{@email_address}>",
           test_key:         "*#{@scoped_text}*",
           list_key:         "* #{@scoped_text}",
           interpolated_key: "Global? (!test_key!)",
+          interpol_arg_key: "Interpolate global? (!interpolated_key!)",
           recursive_key:    "Recursively !test.interpolated_key!",
           quoted_key:       "They're looking for \"#{@global_text}\"--#{@scoped_text}",
           argument_key:     "This is what %{user} said",
@@ -90,6 +92,10 @@ describe TextHelpers::Translation do
 
       it "interpolates values wrapped in !!" do
         assert_equal "Global? (#{@global_text})", @helper.text(:interpolated_key)
+      end
+
+      it "interpolates contents of scopes wrapped in !!" do
+        assert_equal "Interpolate global? (My interpolated text)", @helper.text(:interpol_arg_key, interpolate_with: "My interpolated text")
       end
 
       it "handles recursive interpolation" do
