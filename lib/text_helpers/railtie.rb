@@ -4,7 +4,7 @@ module TextHelpers
 
     initializer "text_helpers.configure_rails_initialization" do
 
-      class ActionView::Base
+      ActionView::Base.class_eval do
         include TextHelpers::Translation
 
         protected
@@ -28,7 +28,7 @@ module TextHelpers
         end
       end
 
-      class ActionMailer::Base
+      ActionMailer::Base.class_eval do
         include TextHelpers::Translation
 
         protected
@@ -43,7 +43,7 @@ module TextHelpers
         end
       end
 
-      class ActionController::Base
+      ActionController::Base.class_eval do
         include TextHelpers::Translation
 
         protected
