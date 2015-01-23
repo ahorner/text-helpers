@@ -1,15 +1,13 @@
 module TextHelpers
-
   class Railtie < Rails::Railtie
+    config.text_helpers = ActiveSupport::OrderedOptions.new
+    config.text_helpers.raise_on_missing_translations = Rails.env.test? || Rails.env.development?
 
-    initializer "text_helpers.configure_rails_initialization" do
-
-      class ActionView::Base
+    initializer "text_helpers.action_view.extend_base" do
+      ActionView::Base.class_eval do
         include TextHelpers::Translation
 
-        protected
-
-        # Protected: Derive a translation scope from the current view template.
+        # Public: Derive a translation scope from the current view template.
         #
         # Determines an I18n-friendly scope for the current view file when possible,
         # or falls back to "views.<controller>.<action>"
@@ -27,13 +25,13 @@ module TextHelpers
           end
         end
       end
+    end
 
-      class ActionMailer::Base
+    initializer "text_helpers.action_mailer.extend_base" do
+      ActionMailer::Base.class_eval do
         include TextHelpers::Translation
 
-        protected
-
-        # Protected: Provides a scope for I18n lookups.
+        # Public: Provides a scope for I18n lookups.
         #
         # Should look like `mailers.<mailer>.<action>`
         #
@@ -42,13 +40,13 @@ module TextHelpers
           "mailers.#{mailer_name.tr("/", ".").sub("_mailer", "")}.#{action_name}"
         end
       end
+    end
 
-      class ActionController::Base
+    initializer "text_helpers.action_controller.extend_base" do
+      ActionController::Base.class_eval do
         include TextHelpers::Translation
 
-        protected
-
-        # Protected: Provides a scope for I18n lookups.
+        # Public: Provides a scope for I18n lookups.
         #
         # Should look like `controllers.<controller_name>`.
         #
@@ -57,6 +55,16 @@ module TextHelpers
           "controllers.#{params[:controller]}"
         end
       end
+    end
+
+    initializer "text_helpers.setup_exception_handling", after: 'after_initialize' do
+      next unless config.text_helpers.raise_on_missing_translations
+
+      if config.respond_to?(:action_view)
+        config.action_view.raise_on_missing_translations = true
+      end
+
+      TextHelpers.install_i18n_exception_handler
     end
   end
 end
