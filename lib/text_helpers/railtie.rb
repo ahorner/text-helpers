@@ -1,5 +1,8 @@
 module TextHelpers
   class Railtie < Rails::Railtie
+    config.text_helpers = ActiveSupport::OrderedOptions.new
+    config.text_helpers.raise_on_missing_translations = Rails.env.test? || Rails.env.development?
+
     initializer "text_helpers.action_view.extend_base" do
       ActionView::Base.class_eval do
         include TextHelpers::Translation
@@ -52,6 +55,16 @@ module TextHelpers
           "controllers.#{params[:controller]}"
         end
       end
+    end
+
+    initializer "text_helpers.setup_exception_handling", after: 'after_initialize' do
+      next unless config.text_helpers.raise_on_missing_translations
+
+      if config.respond_to?(:action_view)
+        config.action_view.raise_on_missing_translations = true
+      end
+
+      TextHelpers.install_i18n_exception_handler
     end
   end
 end

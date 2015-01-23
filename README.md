@@ -90,3 +90,40 @@ specs by adding `view: true` to the spec metadata.
 
 The controller text helpers described above can be accessed in controller
 specs by adding `controller: true` to your spec metadata.
+
+## Configuration & Initialization
+
+### Initialization
+
+`TextHelpers` performs some setup during your application's initialization. Four
+initializers are installed:
+
+#### `text_helpers.action_view.extend_base`
+
+This initializer includes the `TextHelpers::Translation` module into
+`ActionView::Base` and adds an appropriate `#translation_scope` method.
+
+#### `text_helpers.action_mailer.extend_base`
+
+This initializer includes the `TextHelpers::Translation` module into
+`ActionMailer::Base` and adds an appropriate `#translation_scope` method.
+
+#### `text_helpers.action_controller.extend_base`
+
+This initializer includes the `TextHelpers::Translation` module into
+`ActionController::Base` and adds an appropriate `#translation_scope` method.
+
+#### `text_helpers.setup_exception_handling`
+
+This initializer configures exception handling so that exceptions are raised
+if `config.text_helpers.raise_on_missing_translations` is set to `true`, which
+it is by default in the `test` or `development` environments.
+
+### Configuration
+
+#### `config.text_helpers.raise_on_missing_translations`
+
+This configuration value defaults to `true` in `test` or `development`
+environments. If set to `false`, your own exception handling can be configured
+by setting `config.action_view.raise_on_missing_translations` and
+`I18n.exception_handler` as appropriate.
