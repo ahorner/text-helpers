@@ -1,15 +1,10 @@
 module TextHelpers
-
   class Railtie < Rails::Railtie
-
-    initializer "text_helpers.configure_rails_initialization" do
-
+    initializer "text_helpers.action_view.extend_base" do
       ActionView::Base.class_eval do
         include TextHelpers::Translation
 
-        protected
-
-        # Protected: Derive a translation scope from the current view template.
+        # Public: Derive a translation scope from the current view template.
         #
         # Determines an I18n-friendly scope for the current view file when possible,
         # or falls back to "views.<controller>.<action>"
@@ -27,13 +22,13 @@ module TextHelpers
           end
         end
       end
+    end
 
+    initializer "text_helpers.action_mailer.extend_base" do
       ActionMailer::Base.class_eval do
         include TextHelpers::Translation
 
-        protected
-
-        # Protected: Provides a scope for I18n lookups.
+        # Public: Provides a scope for I18n lookups.
         #
         # Should look like `mailers.<mailer>.<action>`
         #
@@ -42,13 +37,13 @@ module TextHelpers
           "mailers.#{mailer_name.tr("/", ".").sub("_mailer", "")}.#{action_name}"
         end
       end
+    end
 
+    initializer "text_helpers.action_controller.extend_base" do
       ActionController::Base.class_eval do
         include TextHelpers::Translation
 
-        protected
-
-        # Protected: Provides a scope for I18n lookups.
+        # Public: Provides a scope for I18n lookups.
         #
         # Should look like `controllers.<controller_name>`.
         #
