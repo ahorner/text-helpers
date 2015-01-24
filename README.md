@@ -91,6 +91,35 @@ specs by adding `view: true` to the spec metadata.
 The controller text helpers described above can be accessed in controller
 specs by adding `controller: true` to your spec metadata.
 
+### Temporary/Stub Localizations
+
+`text_helpers/rspec.rb` contains some helpers for setting up a test localization
+environment during your test runs.
+
+To configure it, `require "text_helpers/rspec"` and configure the `before` and
+`after` hooks appropriately:
+
+```
+require 'text_helpers/rspec'
+
+RSpec.configure do |config|
+  config.before(:suite) do
+    TextHelpers::RSpec.setup_spec_translations
+  end
+
+  config.after(:each) do
+    TextHelpers::RSpec.reset_spec_translations
+  end
+end
+```
+
+Temporary localizations can then be defined within your examples via the
+`#set_translation` method, like so:
+
+```
+set_translation('models.user.attributes.name', 'Name')
+```
+
 ## Configuration & Initialization
 
 ### Initialization
