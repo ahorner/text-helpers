@@ -4,6 +4,7 @@ describe TextHelpers::Translation do
   before do
     @helper = Object.send(:include, TextHelpers::Translation).new
   end
+
   describe "given a stored I18n lookup" do
     before do
       @scoped_text = "Scoped lookup"
@@ -17,26 +18,33 @@ describe TextHelpers::Translation do
 
       @nb_scoped_text = "Scoped&nbsp;lookup"
 
+      I18n.exception_handler = nil
+
       I18n.backend.store_translations :en, {
         test_key: @global_text,
         multiline_key: @multiline_text,
         interpolated_key: "%{interpolate_with}",
         test: {
-          email_key:        "<#{@email_address}>",
-          test_key:         "*#{@scoped_text}*",
-          list_key:         "* #{@scoped_text}",
-          interpolated_key: "Global? (!test_key!)",
-          interpol_arg_key: "Interpolate global? (!interpolated_key!)",
-          recursive_key:    "Recursively !test.interpolated_key!",
-          quoted_key:       "They're looking for \"#{@global_text}\"--#{@scoped_text}",
-          argument_key:     "This is what %{user} said",
-          number_key:       "120\"",
+          email_key:               "<#{@email_address}>",
+          test_key:                "*#{@scoped_text}*",
+          list_key:                "* #{@scoped_text}",
+          interpolated_key:        "Global? (!test_key!)",
+          interpolated_scoped_key: "Global? (!test_scoped_key!)",
+          interpol_arg_key:        "Interpolate global? (!interpolated_key!)",
+          recursive_key:           "Recursively !test.interpolated_key!",
+          quoted_key:              "They're looking for \"#{@global_text}\"--#{@scoped_text}",
+          argument_key:            "This is what %{user} said",
+          number_key:              "120\"",
           pluralized_key: {
             one:            "A single piece of text",
             other:          "%{count} pieces of text"
           }
         }
       }
+    end
+
+    after do
+      I18n.backend.reload!
     end
 
     describe "for a specified scope" do
@@ -149,6 +157,52 @@ describe TextHelpers::Translation do
 
       it "defaults to a globally-defined value for the key" do
         assert_equal @global_text, @helper.text(:test_key)
+      end
+    end
+
+    describe "when a scope is given as an option" do
+      before do
+        @helper.define_singleton_method :translation_scope do
+          'test'
+        end
+      end
+
+      it "shows translation missing if an interpolated key isn't found at the same scope" do
+        expected = "Global? (translation missing: en.test.test_scoped_key)"
+        assert_equal expected, @helper.text(:interpolated_scoped_key, scope: "test")
+      end
+
+      it "interpolates the key if one is found at the same scope" do
+        I18n.backend.store_translations(:en, {
+          test: {test_scoped_key: "a translation"}})
+
+        assert_equal "Global? (a translation)", @helper.text(:interpolated_scoped_key, scope: "test")
+      end
+
+      describe "with the Cascade backend in place" do
+        before do
+          @original_backend = I18n.backend
+          new_backend = @original_backend.dup
+          new_backend.extend(I18n::Backend::Cascade)
+          I18n.backend = new_backend
+        end
+
+        after do
+          I18n.backend = @original_backend
+        end
+
+        it "cascades the interpolated key by default" do
+          I18n.backend.store_translations(:en, {test_scoped_key: "a translation"})
+
+          assert_equal "Global? (a translation)", @helper.text(:interpolated_scoped_key, scope: "test")
+        end
+
+        it "doesn't cascade if cascade: false is passed" do
+          I18n.backend.store_translations(:en, {test_scoped_key: "a translation"})
+
+          expected = "Global? (translation missing: en.test.test_scoped_key)"
+          assert_equal expected, @helper.text(:interpolated_scoped_key, scope: "test", cascade: false)
+        end
       end
     end
   end
