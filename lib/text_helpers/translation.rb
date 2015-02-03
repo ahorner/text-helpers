@@ -26,9 +26,12 @@ module TextHelpers
         default: "!#{key}!"
       }.merge(options)).strip
 
+      interpolation_options = options.dup
+      interpolation_options[:cascade] = true unless interpolation_options.has_key?(:cascade)
+
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
       while text =~ /!([\w._\/]+)!/ do
-        text = text.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1, options) }
+        text = text.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1, interpolation_options) }
       end
 
       text = smartify(text) if options.fetch(:smart, true)
