@@ -183,11 +183,7 @@ describe TextHelpers::Translation do
         before do
           @original_backend = I18n.backend
           new_backend = @original_backend.dup
-
-          class << new_backend
-            include I18n::Backend::Cascade
-          end
-
+          new_backend.extend(I18n::Backend::Cascade)
           I18n.backend = new_backend
         end
 
