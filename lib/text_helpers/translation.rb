@@ -11,12 +11,9 @@ module TextHelpers
     # Public: Get the I18n localized text for the passed key.
     #
     # key     - The desired I18n lookup key.
-    # options - A Hash of options to pass through to the lookup.
-    #           :orphans - A special option that will prevent the insertion of
-    #                      non-breaking space characters at the end of the text
-    #                      when set to true.
-    #           :smart   - Whether or not to apply smart quoting to the output.
-    #                      Defaults to true.
+    # options - A Hash of options to forward to the `I18n.t` lookup.
+    #           :smart - Whether or not to apply smart quoting to the output.
+    #                    Defaults to true.
     #
     # Returns a String resulting from the I18n lookup.
     def text(key, options = {})
