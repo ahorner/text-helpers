@@ -24,6 +24,8 @@ describe TextHelpers::Translation do
         test_key: @global_text,
         multiline_key: @multiline_text,
         interpolated_key: "%{interpolate_with}",
+        internal_link: "[Internal link](/internal/path)",
+        external_link: "[External link](http://external.com)",
         test: {
           email_key:               "<#{@email_address}>",
           test_key:                "*#{@scoped_text}*",
@@ -96,6 +98,14 @@ describe TextHelpers::Translation do
 
       it "correctly combines :orphans and :inline options" do
         assert_equal "<em>#{@scoped_text}</em>\n", @helper.html(:test_key, inline: true, orphans: true)
+      end
+
+      it "renders internal links without a target" do
+        assert_equal "<a href=\"/internal/path\">Internal&nbsp;link</a>\n", @helper.html(:internal_link, inline: true)
+      end
+
+      it "renders external links with target='_blank'" do
+        assert_equal "<a href=\"http://external.com\" target=\"_blank\">External&nbsp;link</a>\n", @helper.html(:external_link, inline: true)
       end
 
       it "interpolates values wrapped in !!" do
