@@ -4,6 +4,20 @@ require "redcarpet"
 
 module TextHelpers
 
+  class ExternalLinks < Redcarpet::Render::HTML
+
+    def link(link, title, content)
+      attributes = [
+        ("href=\"#{link}\"" if link),
+        ("title=\"#{title}\"" if title),
+        ("target=\"_blank\"" if link.starts_with?("http")),
+      ]
+
+      "<a #{attributes.compact.join(" ")}>#{content}</a>"
+    end
+
+  end
+
   module Translation
 
     ORPHAN_MATCHER = /\s(?![^<]*>)(\S+\s*<\/(?:p|li)>)/.freeze
@@ -62,7 +76,7 @@ module TextHelpers
     #
     # Returns a String.
     def markdown(text)
-      @renderer ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
+      @renderer ||= Redcarpet::Markdown.new(ExternalLinks, no_intra_emphasis: true)
       smartify(@renderer.render(text))
     end
 
