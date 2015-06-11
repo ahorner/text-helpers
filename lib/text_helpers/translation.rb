@@ -6,11 +6,13 @@ module TextHelpers
 
   class ExternalLinks < Redcarpet::Render::HTML
 
+    PROTOCOL_MATCHER = /\Ahttp/.freeze
+
     def link(link, title, content)
       attributes = [
         ("href=\"#{link}\"" if link),
         ("title=\"#{title}\"" if title),
-        ("target=\"_blank\"" if link.starts_with?("http")),
+        ("target=\"_blank\"" if link =~ PROTOCOL_MATCHER),
       ]
 
       "<a #{attributes.compact.join(" ")}>#{content}</a>"
