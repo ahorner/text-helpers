@@ -24,7 +24,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency("activesupport")
   gem.add_dependency("i18n", ">=0.6.8")
-  gem.add_dependency("redcarpet")
+  gem.add_dependency("redcarpet", ">=3.3.3")
 
   gem.add_development_dependency("rake")
   gem.add_development_dependency("railties")
