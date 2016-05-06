@@ -57,6 +57,11 @@ module TextHelpers
       end
     end
 
+    initializer "text_helpers.i18n.add_load_paths" do |app|
+      locales = Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s
+      app.config.i18n.load_path += Dir[locales]
+    end
+
     initializer "text_helpers.setup_exception_handling", after: 'after_initialize' do
       next unless config.text_helpers.raise_on_missing_translations
 
