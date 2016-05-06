@@ -1,4 +1,4 @@
-shared_context "a controller spec", controller: true do
+RSpec.shared_context "a controller spec", controller: true do
   include TextHelpers::Translation
 
   def translation_scope
@@ -7,7 +7,7 @@ shared_context "a controller spec", controller: true do
   end
 end
 
-shared_context "a mailer spec", mailer: true do
+RSpec.shared_context "a mailer spec", mailer: true do
   include TextHelpers::Translation
 
   def translation_scope
@@ -16,7 +16,7 @@ shared_context "a mailer spec", mailer: true do
   end
 end
 
-shared_context "a view spec", view: true do
+RSpec.shared_context "a view spec", view: true do
   include TextHelpers::Translation
 
   def translation_scope
