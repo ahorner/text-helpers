@@ -97,7 +97,7 @@ module TextHelpers
     #
     # Raises NotImplementedError.
     def translation_scope
-      raise NotImplementedError
+      raise NotImplementedError, "must implement a public method `translation_scope` to determine I18n scope"
     end
 
     # Protected: Convert all passed in arguments into html-safe strings
