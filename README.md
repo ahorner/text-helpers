@@ -60,7 +60,9 @@ The controller text helpers described above can be accessed in controller specs 
 
 ### Temporary/Stub Localizations
 
-`text_helpers/rspec.rb` contains some helpers for setting up a test localization environment during your test runs.
+`text_helpers/rspec.rb` contains some helpers for setting up a test localization
+environment during your test runs. You can enable the helper methods by adding
+the `:text_helpers` tag to the examples that require them.
 
 To configure it, `require "text_helpers/rspec"` and configure the `before` and
 `after` hooks appropriately:
@@ -69,11 +71,13 @@ To configure it, `require "text_helpers/rspec"` and configure the `before` and
 require 'text_helpers/rspec'
 
 RSpec.configure do |config|
+  config.include TextHelpers::RSpec::TestHelpers, text_helpers: true
+
   config.before(:suite) do
     TextHelpers::RSpec.setup_spec_translations
   end
 
-  config.after(:each) do
+  config.after(:each, :text_helpers) do
     TextHelpers::RSpec.reset_spec_translations
   end
 end
@@ -83,7 +87,13 @@ Temporary localizations can then be defined within your examples via the
 `#set_translation` method, like so:
 
 ```
-set_translation('models.user.attributes.name', 'Name')
+describe "with a translation set", :text_helpers do
+  before do
+    set_translation('models.user.attributes.name', 'Name')
+  end
+
+  it { ... }
+end
 ```
 
 ## Configuration & Initialization
