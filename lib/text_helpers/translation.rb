@@ -22,7 +22,8 @@ module TextHelpers
 
   module Translation
 
-    ORPHAN_MATCHER = /[ \t](?![^<]*>)(\S+\s*<\/(?:p|li)>)/.freeze
+    ORPHAN_MATCHER = /(\w+)[ \t](?![^<]*>)(\S+\s*<\/(?:p|li)>)/.freeze
+    KEYPATH_MATCHER = /!([\w.\/]+)!/.freeze
 
     # Public: Get the I18n localized text for the passed key.
     #
@@ -43,8 +44,8 @@ module TextHelpers
       interpolation_options[:cascade] = true unless interpolation_options.has_key?(:cascade)
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
-      while text =~ /!([\w._\/]+)!/ do
-        text = text.gsub(/!([\w._\/]+)!/) { |match| I18n.t($1, interpolation_options) }
+      while text =~ KEYPATH_MATCHER do
+        text = text.gsub(KEYPATH_MATCHER) { |match| I18n.t($1, interpolation_options) }
       end
 
       text = smartify(text) if options.fetch(:smart, true)
@@ -65,7 +66,7 @@ module TextHelpers
     def html(key, options = {})
       rendered = markdown(text(key, options.merge(smart: false)))
 
-      rendered = options[:orphans] ? rendered : rendered.gsub(ORPHAN_MATCHER, '&nbsp;\1')
+      rendered = options[:orphans] ? rendered : rendered.gsub(ORPHAN_MATCHER, '\1&nbsp;\2')
       rendered = rendered.gsub(/<\/?p>/, '') if options[:inline]
       rendered.html_safe
     end

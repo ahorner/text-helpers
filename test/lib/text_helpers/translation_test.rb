@@ -32,6 +32,7 @@ describe TextHelpers::Translation do
           test_key:                "*#{@scoped_text}*",
           list_key:                "* #{@scoped_text}",
           single_word_list_key:    "* #{@single_word_text}",
+          prerendered_html_key:    "<ul>\n <li> Get everything you ever wanted</li>\n <li> Practically-guaranteed</li>\n </ul>",
           interpolated_key:        "Global? (!test_key!)",
           interpolated_scoped_key: "Global? (!test_scoped_key!)",
           interpol_arg_key:        "Interpolate global? (!interpolated_key!)",
@@ -84,6 +85,12 @@ describe TextHelpers::Translation do
         EXPECTED
 
         assert_equal expected, @helper.html(:single_word_list_key)
+      end
+
+      it "correctly handles orphans in HTML with erratic whitespace" do
+        expected = "<ul>\n <li> Get everything you ever&nbsp;wanted</li>\n <li> Practically-guaranteed</li>\n </ul>\n"
+
+        assert_equal expected, @helper.html(:prerendered_html_key)
       end
 
       it "does not modify HTML tags" do
