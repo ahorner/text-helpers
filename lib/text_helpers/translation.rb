@@ -22,7 +22,7 @@ module TextHelpers
 
   module Translation
 
-    ORPHAN_MATCHER = /\s(?![^<]*>)(\S+\s*<\/(?:p|li)>)/.freeze
+    ORPHAN_MATCHER = /[ \t](?![^<]*>)(\S+\s*<\/(?:p|li)>)/.freeze
 
     # Public: Get the I18n localized text for the passed key.
     #
@@ -82,7 +82,7 @@ module TextHelpers
       smartify(@renderer.render(text))
     end
 
-    # Protected: Auto-apply smart quotes and to the passed text.
+    # Internal: Auto-apply smart quotes to the passed text.
     #
     # text - A String which should be passed through the SmartyPants renderer.
     #
@@ -91,7 +91,7 @@ module TextHelpers
       Redcarpet::Render::SmartyPants.render(text)
     end
 
-    # Protected: The proper scope for I18n translation.
+    # Internal: The proper scope for I18n translation.
     #
     # Must be implemented by any classes which include this module.
     #
@@ -100,7 +100,7 @@ module TextHelpers
       raise NotImplementedError, "must implement a public method `translation_scope` to determine I18n scope"
     end
 
-    # Protected: Convert all passed in arguments into html-safe strings
+    # Internal: Convert all passed in arguments into html-safe strings
     #
     # hash - a set of key-value pairs, which converts the second argument into an html-safe string
     #

@@ -9,6 +9,7 @@ describe TextHelpers::Translation do
     before do
       @scoped_text = "Scoped lookup"
       @global_text = "Global lookup"
+      @single_word_text = "Single"
       @email_address = "user@example.org"
       @multiline_text = <<-MULTI.gsub(/^[ \t]+/, '')
         This is some multiline text.
@@ -30,6 +31,7 @@ describe TextHelpers::Translation do
           email_key:               "<#{@email_address}>",
           test_key:                "*#{@scoped_text}*",
           list_key:                "* #{@scoped_text}",
+          single_word_list_key:    "* #{@single_word_text}",
           interpolated_key:        "Global? (!test_key!)",
           interpolated_scoped_key: "Global? (!test_scoped_key!)",
           interpol_arg_key:        "Interpolate global? (!interpolated_key!)",
@@ -72,6 +74,16 @@ describe TextHelpers::Translation do
         EXPECTED
 
         assert_equal expected, @helper.html(:list_key)
+      end
+
+      it "does not inject `&nbsp;` entities in HTML list items unnecessarily" do
+        expected = <<-EXPECTED.gsub(/^[ \t]+/, '')
+        <ul>
+        <li>#{@single_word_text}</li>
+        </ul>
+        EXPECTED
+
+        assert_equal expected, @helper.html(:single_word_list_key)
       end
 
       it "does not modify HTML tags" do
