@@ -171,9 +171,31 @@ describe TextHelpers::Translation do
         assert_equal "This is what <b>Han</b> Solo said", @helper.text(:argument_key, user: "<b>Han</b> Solo".html_safe)
       end
 
-      it "correctly handles non-string params" do
+      it "correctly handles pluralized keys" do
         assert_equal "A single piece of text", @helper.text(:pluralized_key, count: 1)
         assert_equal "2 pieces of text", @helper.text(:pluralized_key, count: 2)
+      end
+
+      describe "when the pluralization backend is configured and the exception handler is enabled" do
+        before do
+          @original_backend = I18n.backend
+          new_backend = @original_backend.dup
+          new_backend.extend(I18n::Backend::Pluralization)
+          I18n.backend = new_backend
+
+          @original_exception_handler = I18n.exception_handler
+          I18n.exception_handler = TextHelpers::RaiseExceptionHandler.new
+        end
+
+        after do
+          I18n.backend = @original_backend
+          I18n.exception_handler = @original_exception_handler
+        end
+
+        it "correctly handles pluralized keys" do
+          assert_equal "A single piece of text", @helper.text(:pluralized_key, count: 1)
+          assert_equal "2 pieces of text", @helper.text(:pluralized_key, count: 2)
+        end
       end
     end
 
