@@ -5,10 +5,10 @@ require "text_helpers/railtie" if defined?(Rails)
 module TextHelpers
   # RaiseExceptionHandler just raises all exceptions, rather than swallowing
   # MissingTranslation ones. It's cribbed almost verbatim from
-  # http://edgeguides.rubyonrails.org/i18n.html#customize-your-i18n-setup.
+  # https://guides.rubyonrails.org/i18n.html#using-different-exception-handlers.
   class RaiseExceptionHandler < I18n::ExceptionHandler
     def call(exception, locale, key, options)
-      if exception.is_a?(I18n::MissingTranslation)
+      if exception.is_a?(I18n::MissingTranslation) && key.to_s != "i18n.plural.rule"
         raise exception.to_exception
       else
         super
