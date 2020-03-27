@@ -35,7 +35,7 @@ module TextHelpers
     # Returns a String resulting from the I18n lookup.
     def text(key, options = {})
       options = html_safe_options(options)
-      text = I18n.t(key, {
+      text = I18n.t(key, **{
         scope: self.translation_scope,
         default: "!#{key}!"
       }.merge(options)).strip
@@ -45,7 +45,7 @@ module TextHelpers
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
       while text =~ KEYPATH_MATCHER do
-        text = text.gsub(KEYPATH_MATCHER) { |match| I18n.t($1, interpolation_options) }
+        text = text.gsub(KEYPATH_MATCHER) { |match| I18n.t($1, **interpolation_options) }
       end
 
       text = smartify(text) if options.fetch(:smart, true)
