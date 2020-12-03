@@ -37,11 +37,11 @@ module TextHelpers
       options = html_safe_options(options)
       text = I18n.t(key, **{
         scope: self.translation_scope,
-        default: "!#{key}!"
+        default: "!#{key}!",
+        cascade: true,
       }.merge(options)).strip
 
-      interpolation_options = options.dup
-      interpolation_options[:cascade] = true unless interpolation_options.has_key?(:cascade)
+      interpolation_options = { cascade: true }.merge(options)
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
       while text =~ KEYPATH_MATCHER do

@@ -1,4 +1,4 @@
-require_relative '../../test_helper'
+require_relative "../../test_helper"
 
 describe TextHelpers::Translation do
   before do
@@ -240,6 +240,14 @@ describe TextHelpers::Translation do
 
         after do
           I18n.backend = @original_backend
+        end
+
+        it "cascades the requested key by default" do
+          I18n.backend.store_translations(:en, {test_scoped_key: "a translation"})
+          assert_equal "a translation", @helper.text(:test_scoped_key, scope: "some.unnecessary.scope")
+
+          I18n.backend.store_translations(:en, {some: {test_scoped_key: "a scoped translation"}})
+          assert_equal "a scoped translation", @helper.text(:test_scoped_key, scope: "some.unnecessary.scope")
         end
 
         it "cascades the interpolated key by default" do
