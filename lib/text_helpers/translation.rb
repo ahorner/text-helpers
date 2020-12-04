@@ -12,7 +12,7 @@ module TextHelpers
       attributes = [
         ("href=\"#{link}\"" if link),
         ("title=\"#{title}\"" if title),
-        ("target=\"_blank\"" if link =~ PROTOCOL_MATCHER),
+        ("target=\"_blank\" rel=\"noopener\"" if link.match?(PROTOCOL_MATCHER)),
       ]
 
       "<a #{attributes.compact.join(" ")}>#{content}</a>"
