@@ -44,7 +44,7 @@ module TextHelpers
       interpolation_options = { cascade: true }.merge(options)
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
-      while text =~ KEYPATH_MATCHER do
+      while text.match?(KEYPATH_MATCHER) do
         text = text.gsub(KEYPATH_MATCHER) { |match| I18n.t($1, **interpolation_options) }
       end
 
