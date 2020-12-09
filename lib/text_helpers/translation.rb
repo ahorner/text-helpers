@@ -12,7 +12,7 @@ module TextHelpers
       attributes = [
         ("href=\"#{link}\"" if link),
         ("title=\"#{title}\"" if title),
-        ("target=\"_blank\"" if link =~ PROTOCOL_MATCHER),
+        ("target=\"_blank\" rel=\"noopener\"" if link.match?(PROTOCOL_MATCHER)),
       ]
 
       "<a #{attributes.compact.join(" ")}>#{content}</a>"
@@ -44,7 +44,7 @@ module TextHelpers
       interpolation_options = { cascade: true }.merge(options)
 
       # Interpolate any keypaths (e.g., `!some.lookup.path/key!`) found in the text.
-      while text =~ KEYPATH_MATCHER do
+      while text.match?(KEYPATH_MATCHER) do
         text = text.gsub(KEYPATH_MATCHER) { |match| I18n.t($1, **interpolation_options) }
       end
 

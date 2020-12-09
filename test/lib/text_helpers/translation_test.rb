@@ -119,12 +119,12 @@ describe TextHelpers::Translation do
         assert_equal "<em>#{@scoped_text}</em>\n", @helper.html(:test_key, inline: true, orphans: true)
       end
 
-      it "renders internal links without a target" do
+      it "renders internal links without a target or rel" do
         assert_equal "<a href=\"/internal/path\">Internal&nbsp;link</a>\n", @helper.html(:internal_link, inline: true)
       end
 
-      it "renders external links with target='_blank'" do
-        assert_equal "<a href=\"http://external.com\" target=\"_blank\">External&nbsp;link</a>\n", @helper.html(:external_link, inline: true)
+      it "renders external links with target='_blank' and rel='noopener'" do
+        assert_equal "<a href=\"http://external.com\" target=\"_blank\" rel=\"noopener\">External&nbsp;link</a>\n", @helper.html(:external_link, inline: true)
       end
 
       it "interpolates values wrapped in !!" do
