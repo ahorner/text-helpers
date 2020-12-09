@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.1.0] - 2020-12-02
+
+### New Features 
+
+- Add `rel=noopener` to external links (thanks to @n00dle)
+
 ## [1.0.1] - 2020-12-02
 
 ### Changes 
@@ -14,7 +20,7 @@
 
 ### Bug Fixes
 
-- Properly support translations using I18n::Pluralization backend (Thanks to @jhanggi)
+- Properly support translations using I18n::Pluralization backend (thanks to @jhanggi)
 
 ## [0.7.2] - 2019-07-06
 
@@ -69,6 +75,7 @@
 
 - Add RSpec helpers (thanks to @gabrielg)
 
+[1.1.0]: https://github.com/ahorner/text-helpers/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/ahorner/text-helpers/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/ahorner/text-helpers/compare/v0.7.2...v1.0.0
 [0.7.2]: https://github.com/ahorner/text-helpers/compare/v0.7.1...v0.7.2
