@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.1.1] - 2021-02-02
+
+### Changes
+
+- Bump minimum redcarpet version for security (thanks to @n00dle)
+
 ## [1.1.0] - 2020-12-02
 
 ### New Features 
@@ -75,6 +81,7 @@
 
 - Add RSpec helpers (thanks to @gabrielg)
 
+[1.1.1]: https://github.com/ahorner/text-helpers/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/ahorner/text-helpers/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/ahorner/text-helpers/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/ahorner/text-helpers/compare/v0.7.2...v1.0.0
