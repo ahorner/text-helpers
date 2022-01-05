@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.2.0] - 2022-01-05
+
+### Changes
+
+- Add support for Rails 7 (thanks to @boatrite)
+
 ## [1.1.1] - 2021-02-02
 
 ### Changes
@@ -8,13 +14,13 @@
 
 ## [1.1.0] - 2020-12-02
 
-### New Features 
+### New Features
 
 - Add `rel=noopener` to external links (thanks to @n00dle)
 
 ## [1.0.1] - 2020-12-02
 
-### Changes 
+### Changes
 
 - Support cascading backends by default
 
@@ -81,6 +87,7 @@
 
 - Add RSpec helpers (thanks to @gabrielg)
 
+[1.2.0]: https://github.com/ahorner/text-helpers/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/ahorner/text-helpers/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/ahorner/text-helpers/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/ahorner/text-helpers/compare/v1.0.0...v1.0.1
